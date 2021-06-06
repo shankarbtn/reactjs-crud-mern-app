@@ -8,6 +8,9 @@ const FoodSchema = new mongoose.Schema({
     foodType: {
         type: String,
         required: true
+    },
+    dateAdded: {
+        type: Date
     }
 });
 

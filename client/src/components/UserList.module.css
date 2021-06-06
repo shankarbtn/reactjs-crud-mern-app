@@ -1,0 +1,56 @@
+.listContainer {
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    min-width: 200px;
+    width: 70%;
+}
+
+.listItem {
+    display: flex;
+    align-items: center;
+}
+
+.listItem .header {
+    background-color: rgb(181, 181, 181);
+    font-weight: bold;
+}
+
+.listItem:nth-child( odd ) {
+    background-color: #eee;
+}
+
+.listItem:nth-child( even ) {
+    background-color: #ddd;
+}
+
+.listItem div{
+    width: 100%;
+    padding: 10px;
+}
+
+.editBtn{
+    background-color: rgb(1, 1, 253);
+    margin-right: 10px;
+}
+
+.deleteBtn{
+    background-color: rgb(205, 8, 48);
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    .listContainer {
+        width: 100%;
+    }
+    .listItem {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+    }
+    .listItem div{
+        width: 100%;
+        padding: 5px;
+    }
+}
