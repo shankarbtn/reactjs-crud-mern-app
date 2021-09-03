@@ -1,9 +1,11 @@
 import { useState, createContext }  from 'react';
 import Axios from "axios";
+import EditForm from '../components/EditForm';
 
 const ItemContext = createContext({
     itemsList: [],
     totalItemsList: 0,
+    isModelOpen: false,
     getItem: () => {},
     addItem: () => {},
     editItem: (id) => {},
@@ -19,18 +21,21 @@ export function ItemContextProvider(props) {
     const SERVER_ACTION_DELETE = "delete";
 
     const [items, setItem] = useState([]);
+    const [isModelOpen, setIsModelOpen] = useState(false);
 
     async function getItemHandler() {
-        await Axios.get(SERVER_HTTP_URL + SERVER_ACTION_READ)
-        .then(function (response) {
-            console.log('server response >>> '+ JSON.stringify(response));
-            setItem(response.data);
-        })
-        .catch(function (error) {
-            console.log(error);
-            document.getElementById("formError").innerHTML = error;
-            document.getElementById("formError").style.display = "block";
-        });
+        try {
+            await Axios.get(SERVER_HTTP_URL + SERVER_ACTION_READ)
+            .then(function (response) {
+                console.log('server response >>> '+ response.data);
+                setItem(response.data);
+            })
+            .catch((err) => { 
+                console.error('Read api error:', err);
+            });
+        }catch(err) {
+            console.log(err);
+        }
     }
 
     async function addItemHandler(formData) {
@@ -49,20 +54,21 @@ export function ItemContextProvider(props) {
             });
     }
 
-    function editItemHandler(id) {
-        Axios.get(SERVER_HTTP_URL + SERVER_ACTION_UPDATE, {id: id})
+    async function editItemHandler(id) {
+        setIsModelOpen(true);
+        return <EditForm />
+    }
+
+    async function updateItemHandler(id) {
+        await Axios.get(SERVER_HTTP_URL + SERVER_ACTION_UPDATE, {id: id})
         .then(res => {
             console.log(res);
             console.log(res.data);
         })
     }
 
-    function updateItemHandler(id) {
-
-    }
-
-    function deleteItemHandler(id) {
-        Axios.delete(SERVER_HTTP_URL + SERVER_ACTION_DELETE+`/${id}`)
+    async function deleteItemHandler(id) {
+        await Axios.delete(SERVER_HTTP_URL + SERVER_ACTION_DELETE+`/${id}`)
         .then(res => {
             console.log(res);
             console.log(res.data);
@@ -71,7 +77,8 @@ export function ItemContextProvider(props) {
 
     const context = {
         itemsList: items,
-        totalItemsList: items.length,
+        totalItemsList: items ? items.length : 0,
+        isModelOpen: isModelOpen,
         getItem: getItemHandler,
         addItem: addItemHandler,
         editItem: editItemHandler,

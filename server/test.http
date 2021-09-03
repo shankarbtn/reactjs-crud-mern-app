@@ -1,0 +1,7 @@
+POST = "http://localhost:3001/read"
+Content-Type: application/json
+
+{
+    "foodName": "Grapes",
+    "foodType": "Fruits"
+}

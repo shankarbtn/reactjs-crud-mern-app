@@ -48,7 +48,7 @@ export default function UserFrom() {
 
     const saveFormData = (formData) => {
         console.log(formData);
-        itemCtx.addItemHandler();
+        itemCtx.addItem();
     };
 
     return (
@@ -62,12 +62,12 @@ export default function UserFrom() {
                         <label htmlFor='food-type'>Food Type</label>
                         <input type='text' id='food-type' ref={foodTypeRef} placeholder='Enter Food Type'/>
                     </div>
-                    <div className={classes.actions}>
-                        <button>Add Food Item</button>
-                    </div>
                     <div className={classes.formInfo}>
                         <span className={classes.formError} id='formError'></span>
                         <span className={classes.formSuccess} id='formSuccess'></span>
+                    </div>
+                    <div className={classes.actions}>
+                        <button>Add Food Item</button>
                     </div>
                 </form>
         </section>

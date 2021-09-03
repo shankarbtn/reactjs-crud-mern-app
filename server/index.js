@@ -1,21 +1,29 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const FoodModel = require('./models/Food');
 
 const app = express();
-const FoodModel = require('./models/Food');
 
 //accepts json input form client
 app.use(express.json());
 app.use(cors());
 
 //DB connect
-mongoose.connect('mongodb+srv://crud-app-user:HJXd5LbOi8pakU4f@cluster0.rj7gd.mongodb.net/crud-app?retryWrites=true&w=majority', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-.then(() => { console.log('MongoDB Server Connected');})
-.catch((err) => { console.log(err) });
+const uri = 'mongodb+srv://crud-app-user:LqPJ9I1KPj6cl2r7@cluster0.rj7gd.mongodb.net/Food?retryWrites=true&w=majority';
+mongoose.connect(uri, {
+                    useNewUrlParser: true,
+                    useUnifiedTopology: true
+                })
+const db = mongoose.connection;
+db.once('open', () => console.log('MongoDB Server Connected Successfully'));
+db.on('error', (e) => console.log('MongoDB Server Error'+ e));
+
+// .then(() => { console.log('MongoDB Server Connected');})
+// .catch((err) => { 
+//     console.error('App starting error:', err.stack);
+//     process.exit(1);
+// });
 
 //Route
 app.post('/insert', async (req, res) => {
@@ -34,16 +42,22 @@ app.post('/insert', async (req, res) => {
 });
 
 app.get('/read', async (req, res) => {
-    await FoodModel.find({}, (err, result) => {
-        if(err) {
-            res.send(err);
-        }
-        
-        res.send(result);
-    })
-    .sort({
-        dateAdded: -1 //Sort by DESC
-    });
+    try {
+        await FoodModel.find({}, (err, result) => {
+            if (err) {
+                res.send(err);
+            } else {
+                console.log(result);
+                res.send(result);
+            }
+        });
+        // .sort({
+        //     dateAdded: -1 //Sort by DESC
+        // });
+        res.send('data retreived successfully');
+    } catch(err) {
+        console.log(err);
+    }
 });
 
 app.put('/update', async (req, res) => {
@@ -60,7 +74,6 @@ app.put('/update', async (req, res) => {
     } catch(err) {
         console.log(err);
     }
-    
 });
 
 app.delete('/delete/:id', async (req, res) => {
